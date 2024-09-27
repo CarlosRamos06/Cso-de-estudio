@@ -76,10 +76,16 @@ class DVD(Material, Prestamo):
 def obtener_numero(mensaje):
     while True:
         valor = input(mensaje)
-        if valor.isdigit():  # Verifica si el valor es numérico
+        if valor.isdigit():
             return int(valor)
         else:
             print("Por favor, ingresa un número válido.")
+
+def buscar_material(titulo, materiales):
+    for material in materiales:
+        if material.titulo == titulo:
+            return material
+    return None
 
 def menu():
     materiales = []
@@ -91,7 +97,8 @@ def menu():
         print("4. Mostrar Información de Materiales")
         print("5. Prestar Material")
         print("6. Devolver Material")
-        print("7. Salir")
+        print("7. Eliminar Material")
+        print("8. Salir")
         opcion = input("Elige una opción: ")
 
         if opcion == '1':
@@ -130,29 +137,36 @@ def menu():
 
         elif opcion == '5':
             titulo = input("Ingresa el título del material a prestar: ")
-            for material in materiales:
-                if material.titulo == titulo:
-                    if isinstance(material, Prestamo):
-                        material.prestar()
-                    else:
-                        print("El material no se puede prestar.")
-                    break
+            material = buscar_material(titulo, materiales)
+            if material:
+                if isinstance(material, Prestamo):
+                    material.prestar()
+                else:
+                    print("El material no se puede prestar.")
             else:
                 print("Material no encontrado.")
 
         elif opcion == '6':
             titulo = input("Ingresa el título del material a devolver: ")
-            for material in materiales:
-                if material.titulo == titulo:
-                    if isinstance(material, Prestamo):
-                        material.devolver()
-                    else:
-                        print("El material no se puede devolver.")
-                    break
+            material = buscar_material(titulo, materiales)
+            if material:
+                if isinstance(material, Prestamo):
+                    material.devolver()
+                else:
+                    print("El material no se puede devolver.")
             else:
                 print("Material no encontrado.")
 
         elif opcion == '7':
+            titulo = input("Ingresa el título del material a eliminar: ")
+            material = buscar_material(titulo, materiales)
+            if material:
+                materiales.remove(material)
+                print(f"Material '{titulo}' eliminado.")
+            else:
+                print("Material no encontrado.")
+
+        elif opcion == '8':
             print("Saliendo...")
             break
 
